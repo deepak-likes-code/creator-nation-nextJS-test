@@ -9,7 +9,7 @@ import {
 } from '../config'
 
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
-import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
+import NFT from '../artifacts/contracts/NFT.sol/MyToken.json'
 
 export default function CreatorDashboard() {
     const [nfts, setNfts] = useState([])
