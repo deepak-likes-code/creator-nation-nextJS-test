@@ -7,12 +7,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract MyToken is ERC1155, Ownable, ReentrancyGuard {
+contract MyToken is ERC1155, Ownable {
     // Variables
     using Counters for Counters.Counter;
     Counters.Counter public _tokenIds;
     address public pool;
-    string public contractName;
+    // Contract name
+    string public name;
 
     struct Creator {
         address creatorAddress;
@@ -44,18 +45,22 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
     mapping(address => Token[]) public creatorTokens;
 
     constructor(string memory collectionName, uint256 percent)
-        ERC1155(collectionName)
+        ERC1155("Creator Nation")
     {
+        name = collectionName;
         pool = msg.sender;
         percentageOfSale = percent;
-        contractName = collectionName;
+    }
+
+    function contractURI() public pure returns (string memory) {
+        return "https://jsonkeeper.com/b/OJOC";
     }
 
     // Modifiers
     modifier onlyCreator() {
         require(
             registeredCreator[msg.sender].registrationStatus == true,
-            "You have to be a creator!"
+            "be a creator!"
         );
         _;
     }
@@ -94,10 +99,7 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
         string memory uri,
         string memory mediaUrl
     ) public onlyCreator {
-        require(
-            creatorTokens[msg.sender].length < 6,
-            "You can create a max of 6 Tokens only"
-        );
+        require(creatorTokens[msg.sender].length < 6, "max of 6 Tokens only");
         Token memory _token;
 
         _token = Token(
@@ -138,8 +140,8 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
         returns (bool)
     {
         require(
-            msg.value >= idToToken[_tokenId].cost * _amount * 10**18,
-            "The amount sent should be equal to token's value"
+            msg.value >= idToToken[_tokenId].cost * _amount,
+            "not equal to token's value"
         );
         uint256 amountOfTokensLeft = tokensAvailable[_tokenId];
         address tokenCreator = idToToken[_tokenId].creator.creatorAddress;
@@ -154,11 +156,47 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
 
         tokensAvailable[_tokenId] -= _amount;
         idToToken[_tokenId].amountAvailable -= _amount;
+
+        // Token memory transferToken = Token(
+        //     _tokenId,
+        //     idToToken[_tokenId].creator,
+        //     idToToken[_tokenId].tokenName,
+        //     idToToken[_tokenId].mediaUrl,
+        //     idToToken[_tokenId].cost,
+        //     _amount,
+        //     idToToken[_tokenId].totalSupply,
+        //     block.timestamp
+        // );
+
+        // pushToBuyerTokens(transferToken, msg.sender);
+
         buyerToTokens[msg.sender].push(idToToken[_tokenId]);
         _safeTransferFrom(tokenCreator, msg.sender, _tokenId, _amount, "");
 
         return true;
     }
+
+    // function pushToBuyerTokens(Token memory token, address sender) internal {
+    //     if (buyerToTokens[sender].length == 0) {
+    //         buyerToTokens[sender].push(token);
+    //     } else if (buyerToTokens[sender].length > 0) {
+    //         uint256 id = token.id;
+    //         uint256 amount = token.amountAvailable;
+
+    //         uint256 x;
+
+    //         for (uint256 i = 0; i < buyerToTokens[sender].length; i++) {
+    //             if (buyerToTokens[sender][i].id == id) {
+    //                 x += 1;
+    //                 buyerToTokens[sender][i].amountAvailable += amount;
+    //             }
+    //         }
+
+    //         if (x == 0) {
+    //             buyerToTokens[sender].push(token);
+    //         }
+    //     }
+    // }
 
     // Fetch my NFTs
     function fetchCreatedNFTs() public view returns (Token[] memory itemList) {
@@ -167,9 +205,10 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
             uint256 length = creatorTokens[creator].length;
 
             Token[] memory items = new Token[](length);
-
+            uint256 id;
             for (uint256 i = 0; i < length; i++) {
-                items[i] = creatorTokens[creator][i];
+                id = creatorTokens[creator][i].id;
+                items[i] = idToToken[id];
             }
             return items;
         }
@@ -224,8 +263,4 @@ contract MyToken is ERC1155, Ownable, ReentrancyGuard {
             return items;
         }
     }
-
-    // function getCreators() public view returns (uint256) {
-    //     return registeredCreators.length;
-    // }
 }

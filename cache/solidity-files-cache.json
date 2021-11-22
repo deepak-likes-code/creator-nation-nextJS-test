@@ -666,8 +666,8 @@
       ]
     },
     "/Users/deepakmac/Desktop/Creator Token/Creator Nation/contracts/NFT.sol": {
-      "lastModificationDate": 1637317038836,
-      "contentHash": "638c223bb5c92b3130961a2c1cd7cbbf",
+      "lastModificationDate": 1637579430491,
+      "contentHash": "f490b4b56ea4da982fdd4814ed0c34a3",
       "sourceName": "contracts/NFT.sol",
       "solcConfig": {
         "version": "0.8.3",

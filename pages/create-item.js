@@ -5,7 +5,9 @@ import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal'
 import { RingLoader } from 'react-spinners'
+import Web3 from 'web3'
 import { Alert } from '@material-ui/lab'
+// import { priceFeedAbi } from './aggregatorV3InterfaceABI'
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
@@ -40,8 +42,158 @@ export default function CreateItem() {
             setRegisteredCreator(true)
         }
 
+        // getPrice()
+
     }, [])
 
+
+    async function getPrice() {
+        // const web2 = new Web3();
+
+        // const web3 = new Web3("https://kovan.infura.io/v3/10ca56aa608b46ea81c35dc3de4f4cb1")
+        // console.log('web3: ', web3)
+        // const aggregatorV3InterfaceABI = [{ "inputs": [], "name": "decimals", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "description", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint80", "name": "_roundId", "type": "uint80" }], "name": "getRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "latestRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "version", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }]
+        // const addr = ""
+        // const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr)
+        // const price = await priceFeed.getLatestPrice();
+        // console.log(price)
+
+
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        console.log(provider)
+        const aggregatorV3InterfaceABI = [{ "inputs": [], "name": "decimals", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "description", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint80", "name": "_roundId", "type": "uint80" }], "name": "getRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "latestRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "version", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }]
+        const addr = "0xE4a9701A81a9426e43C229227c8e6D8A80cAaB82"
+
+        const priceFeedAbi = [
+            {
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "description",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint80",
+                        "name": "_roundId",
+                        "type": "uint80"
+                    }
+                ],
+                "name": "getRoundData",
+                "outputs": [
+                    {
+                        "internalType": "uint80",
+                        "name": "roundId",
+                        "type": "uint80"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "answer",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "startedAt",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "updatedAt",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint80",
+                        "name": "answeredInRound",
+                        "type": "uint80"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "latestRoundData",
+                "outputs": [
+                    {
+                        "internalType": "uint80",
+                        "name": "roundId",
+                        "type": "uint80"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "answer",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "startedAt",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "updatedAt",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint80",
+                        "name": "answeredInRound",
+                        "type": "uint80"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "version",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+        const signer = await provider.getSigner();
+
+        const priceFeed = new ethers.Contract(addr, priceFeedAbi, signer)
+        // console.log(priceFeedAbi)
+        console.log(priceFeed)
+        // const price = await priceFeed.getLatestPrice()
+        console.log(priceFeed)
+
+        priceFeed.latestRoundData()
+            .then((roundData) => {
+                // Do something with roundData
+                console.log("Latest Round Data", roundData)
+            })
+
+    }
 
 
     async function onChange(e) {
@@ -77,7 +229,7 @@ export default function CreateItem() {
             const added = await client.add(data)
             const url = `https://ipfs.infura.io/ipfs/${added.path}`
             /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-            createSale(name, price, amount, url)
+            createSale(name, price, amount, url, fileUrl)
         } catch (error) {
             console.log('Error uploading file: ', error)
         }
@@ -87,7 +239,7 @@ export default function CreateItem() {
         router.push('register-creator')
     }
 
-    async function createSale(name, price, amount, url) {
+    async function createSale(name, price, amount, url, fileUrl) {
         const web3Modal = new Web3Modal()
         const connection = await web3Modal.connect()
         const provider = new ethers.providers.Web3Provider(connection)
@@ -96,7 +248,7 @@ export default function CreateItem() {
         /* next, create the item */
         let contract = new ethers.Contract(nftaddress, NFT.abi, signer)
         let itemPrice = ethers.utils.parseEther(price)
-        let transaction = await contract.mint(name, itemPrice, parseFloat(amount), url)
+        let transaction = await contract.mint(name, itemPrice, parseFloat(amount), url, fileUrl.toString())
         setLoading('minting')
         let tx = await transaction.wait()
         // let event = tx.events[0]

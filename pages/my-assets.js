@@ -32,7 +32,7 @@ export default function MyAssets() {
         console.log(NFTContract)
         console.log(signerAddress)
         // const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
-        const data1 = await NFTContract.fetchCreatedNFTs();
+        const data1 = await NFTContract.fetchBoughtNFTs();
         console.log('fetched data: ', data1)
         // const data2 = await NFTContract.creatorTokens(signerAddress, 1);
 
@@ -54,7 +54,7 @@ export default function MyAssets() {
                 tokenId: await i[0].toNumber(),
                 seller: await i[1],
                 owner: "me",
-                // image: meta.data.image,
+                image: i.mediaUrl
             }
             return item
         })
@@ -85,7 +85,7 @@ export default function MyAssets() {
                     {
                         nfts.map((nft, i) => (
                             <div key={i} className="border shadow rounded-xl overflow-hidden">
-                                {/* <embed src={nft.image} className="rounded" /> */}
+                                <img src={nft.image} className="rounded p2" />
                                 <div className="p-4 bg-black">
                                     {/* <a className="text-2xl font-bold text-white" rel="opener" href={nft.image} >link</a> */}
                                     <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
